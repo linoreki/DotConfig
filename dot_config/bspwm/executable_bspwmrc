@@ -1,0 +1,67 @@
+#! /bin/sh
+
+wmname LG3D &
+vmware-user-suid-wrapper &
+
+pgrep -x sxhkd > /dev/null || sxhkd &
+
+bspc monitor DP-4 -d I II III IV V   # Crear 5 escritorios en el monitor principal
+bspc monitor DP-0 -d I II III IV V   # Crear 5 escritorios en el monitor secundario
+
+# Dividir el monitor principal (DP-4) en 5 ventanas
+bspc monitor DP-4 -p tiled
+bspc node -p vertical
+bspc node -p vertical
+bspc node -p vertical
+bspc node -p vertical
+
+# Dividir el monitor secundario (DP-0) en 5 ventanas
+bspc monitor DP-0 -p tiled
+bspc node -p vertical
+bspc node -p vertical
+bspc node -p vertical
+bspc node -p vertical
+
+
+
+bspc config border_width         2
+bspc config window_gap          12
+
+bspc config split_ratio          0.52
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+
+bspc rule -a Gimp desktop='^8' state=floating follow=on
+bspc rule -a Chromium desktop='^2'
+bspc rule -a mplayer2 state=floating
+bspc rule -a Kupfer.py focus=on
+bspc rule -a Screenkey manage=off
+
+# RESOLUCION ARANDR
+
+
+# WALLPAPER
+feh --bg-fill ~/.config/Wallpaper/wall-02.jpg
+
+
+# POLYBAR
+~/.config/polybar/launch.sh
+
+# CUSTOM
+bspc config focus_follows_pointer true
+
+# PICOM
+picom &
+bspc config border_width 2
+
+bspc config active_border_color "#a486dd"
+bspc config normal_border_color "#a486dd"
+
+xsetroot -cursor_name left_ptr &
+
+
+# Configuración de monitores
+~/.config/bspwm/monitor_setup.sh
+
+# Lanzar Polybar
+~/.config/polybar/launch.sh
